@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../models/element_model.dart';
 import '../models/layer_model.dart';
 
@@ -18,14 +19,11 @@ class CanvasProvider extends ChangeNotifier {
   LayerModel? layerOf(String id) =>
       layers.where((l) => l.id == id).firstOrNull;
 
-  // ── إضافة جذع ──────────────────────────────────────────────
   void addTrunk(String shape, double cx, double cy) {
     if (hasTrunk) return;
     final el = CanvasElement(
       id: _nextId(), type: ElementType.trunk,
       x: cx, y: cy, shape: shape,
-      width: 60, height: 220,
-      color: const Color(0xFF7A5210),
     );
     elements.add(el);
     layers.add(LayerModel(id: el.id, name: 'الجذع', type: LayerType.trunk));
@@ -34,15 +32,10 @@ class CanvasProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ── إضافة غصن ──────────────────────────────────────────────
   void addBranch(String shape, String? attachId, double cx, double cy) {
     final el = CanvasElement(
       id: _nextId(), type: ElementType.branch,
-      x: cx, y: cy, shape: shape,
-      length: 100, thickness: 8, angle: -45,
-      color: const Color(0xFF7A5210),
-      nodeColor: const Color(0xFFC9A84C),
-      attachTo: attachId,
+      x: cx, y: cy, shape: shape, attachTo: attachId,
     );
     elements.add(el);
     layers.add(LayerModel(id: el.id, name: 'غصن', type: LayerType.branch));
@@ -50,14 +43,10 @@ class CanvasProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ── إضافة ورقة ──────────────────────────────────────────────
   void addLeaf(String shape, String? attachId, double cx, double cy) {
     final el = CanvasElement(
       id: _nextId(), type: ElementType.leaf,
-      x: cx, y: cy, shape: shape,
-      leafWidth: 36, leafHeight: 52, leafAngle: -60,
-      leafColor: const Color(0xFF40916C),
-      attachTo: attachId,
+      x: cx, y: cy, shape: shape, attachTo: attachId,
     );
     elements.add(el);
     layers.add(LayerModel(id: el.id, name: 'ورقة', type: LayerType.leaf));
@@ -65,13 +54,11 @@ class CanvasProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ── تحديث عنصر ──────────────────────────────────────────────
   void updateElement(String id, CanvasElement updated) {
     final i = elements.indexWhere((e) => e.id == id);
     if (i >= 0) { elements[i] = updated; notifyListeners(); }
   }
 
-  // ── حذف عنصر ──────────────────────────────────────────────
   void deleteElement(String id) {
     final el = elements.where((e) => e.id == id).firstOrNull;
     elements.removeWhere((e) => e.id == id || e.attachTo == id);
@@ -81,7 +68,6 @@ class CanvasProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ── تحريك عنصر ──────────────────────────────────────────────
   void moveElement(String id, double dx, double dy) {
     final layer = layerOf(id);
     if (layer?.locked == true) return;
@@ -96,13 +82,8 @@ class CanvasProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ── تحديد ──────────────────────────────────────────────────
-  void setSelected(String? id) {
-    selected = id;
-    notifyListeners();
-  }
+  void setSelected(String? id) { selected = id; notifyListeners(); }
 
-  // ── طبقات ──────────────────────────────────────────────────
   void updateLayer(String id, {bool? visible, bool? locked}) {
     final i = layers.indexWhere((l) => l.id == id);
     if (i >= 0) {
@@ -111,10 +92,8 @@ class CanvasProvider extends ChangeNotifier {
     }
   }
 
-  // ── خلفية ──────────────────────────────────────────────────
   void setBgColor(Color c) { bgColor = c; notifyListeners(); }
 
-  // ── اكتشاف لمس ──────────────────────────────────────────────
   CanvasElement? hitTest(Offset pos) {
     for (int i = elements.length - 1; i >= 0; i--) {
       final el = elements[i];
@@ -133,35 +112,13 @@ class CanvasProvider extends ChangeNotifier {
             pos.dy >= el.y - 20 &&
             pos.dy <= el.y + el.height + 20;
       case ElementType.branch:
-        final rad = el.angle * 3.14159 / 180;
-        final ex = el.x + el.length * 0.5 * cos(rad);
-        final ey = el.y + el.length * 0.5 * sin(rad);
+        final rad = el.angle * math.pi / 180;
+        final ex = el.x + el.length * 0.5 * math.cos(rad);
+        final ey = el.y + el.length * 0.5 * math.sin(rad);
         return (pos - Offset(ex, ey)).distance < el.length * 0.55 + 20;
       case ElementType.leaf:
-        return (pos - Offset(el.x, el.y)).distance <
-            (el.leafWidth > el.leafHeight ? el.leafWidth : el.leafHeight) * 0.7;
+        final r = math.max(el.leafWidth, el.leafHeight) * 0.7;
+        return (pos - Offset(el.x, el.y)).distance < r;
     }
   }
-}
-
-double cos(double rad) => _cos(rad);
-double sin(double rad) => _sin(rad);
-
-double _cos(double x) {
-  return double.parse(
-      (x is double ? x : x.toDouble()).toString().contains('.')
-          ? '${_mathCos(x)}'
-          : '${_mathCos(x.toDouble())}');
-}
-
-double _sin(double x) => _mathSin(x);
-
-double _mathCos(double x) {
-  import dart:math show cos;
-  return cos(x);
-}
-
-double _mathSin(double x) {
-  import dart:math show sin;
-  return sin(x);
 }
