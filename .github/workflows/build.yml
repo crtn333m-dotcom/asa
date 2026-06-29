@@ -31,17 +31,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Recreate Android folder
-        run: |
-          rm -rf android
-          flutter create --platforms android .
-          flutter pub get
-
       - name: Analyze code
         run: flutter analyze --no-fatal-infos
 
       - name: Build APK
         run: flutter build apk --release --split-per-abi
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
