@@ -1,23 +1,18 @@
-pluginManagement {
-    def kotlin_version = '1.9.24'
+buildscript {
+    ext.kotlin_version = '1.9.24'
     repositories {
         google()
         mavenCentral()
-        gradlePluginPortal()
     }
-    plugins {
-        id "org.jetbrains.kotlin.android" version kotlin_version apply false
-        id "com.android.application" version "8.1.0" apply false
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.1.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+allprojects {
     repositories {
         google()
         mavenCentral()
     }
 }
-
-rootProject.name = "salalati"
-include ':app'
