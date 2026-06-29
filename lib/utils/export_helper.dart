@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:gallery_saver/gallery_saver.dart';
+import 'package:gal/gal.dart';
 import 'dart:io';
 import '../models/element_model.dart';
 import '../models/layer_model.dart';
@@ -42,7 +42,6 @@ Future<void> exportToImage({
   final scaleY = H / screenSize.height;
   canvas.scale(scaleX, scaleY);
 
-  // رسم المحتوى
   MainCanvasPainter(
     elements: elements,
     layers: layers,
@@ -52,12 +51,10 @@ Future<void> exportToImage({
 
   canvas.scale(1 / scaleX, 1 / scaleY);
 
-  // الإطار
   if (options.frameType != 'none') {
     FramePainter.draw(canvas, const Size(W, H), options.frameType, options.frameColor);
   }
 
-  // النصوص
   for (final t in [
     (options.text1, options.text1X, options.text1Y),
     (options.text2, options.text2X, options.text2Y),
@@ -90,5 +87,5 @@ Future<void> exportToImage({
   final dir = await getTemporaryDirectory();
   final file = File('${dir.path}/salalati_${DateTime.now().millisecondsSinceEpoch}.png');
   await file.writeAsBytes(bytes.buffer.asUint8List());
-  await GallerySaver.saveImage(file.path, albumName: 'سلالتي');
+  await Gal.putImage(file.path, album: 'سلالتي');
 }
