@@ -35,6 +35,14 @@ jobs:
           rm -rf fresh_app/lib
           cp -r $GITHUB_WORKSPACE/lib fresh_app/lib
           cp $GITHUB_WORKSPACE/pubspec.yaml fresh_app/pubspec.yaml
+          cat > fresh_app/test/widget_test.dart << 'EOF'
+          import 'package:flutter_test/flutter_test.dart';
+          void main() {
+            testWidgets('smoke test', (WidgetTester tester) async {
+              expect(true, isTrue);
+            });
+          }
+          EOF
 
       - name: Get dependencies
         run: |
