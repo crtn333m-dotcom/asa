@@ -28,20 +28,32 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Create fresh Flutter project
+        run: |
+          cd /tmp
+          flutter create --org com.husain --project-name salalati fresh_app
+          rm -rf fresh_app/lib
+          cp -r $GITHUB_WORKSPACE/lib fresh_app/lib
+          cp $GITHUB_WORKSPACE/pubspec.yaml fresh_app/pubspec.yaml
+
       - name: Get dependencies
-        run: flutter pub get
+        run: |
+          cd /tmp/fresh_app
+          flutter pub get
 
       - name: Analyze code
-        run: flutter analyze --no-fatal-infos
+        run: |
+          cd /tmp/fresh_app
+          flutter analyze --no-fatal-infos
 
       - name: Build APK
-        run: flutter build apk --release --split-per-abi
-        env:
-          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g"
+        run: |
+          cd /tmp/fresh_app
+          flutter build apk --release --split-per-abi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: salalati-apk
-          path: build/app/outputs/flutter-apk/
+          path: /tmp/fresh_app/build/app/outputs/flutter-apk/
           retention-days: 30
