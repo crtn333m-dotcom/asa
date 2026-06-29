@@ -48,7 +48,6 @@ class _SplashScreenState extends State<SplashScreen>
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // دائرة خلفية
               CustomPaint(
                 size: Size(MediaQuery.of(context).size.width,
                     MediaQuery.of(context).size.height),
@@ -58,14 +57,12 @@ class _SplashScreenState extends State<SplashScreen>
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // شجرة متحركة
                   ScaleTransition(
                     scale: _tree,
                     child: const _SplashTree(),
                   ),
                   const SizedBox(height: 28),
 
-                  // العنوان
                   const Text(
                     'سلالتي',
                     style: TextStyle(
@@ -101,7 +98,6 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                   const SizedBox(height: 60),
 
-                  // زر البدء
                   GestureDetector(
                     onTap: () => Navigator.pushReplacement(
                       context,
@@ -137,7 +133,6 @@ class _SplashScreenState extends State<SplashScreen>
                 ],
               ),
 
-              // اسم المصمم
               const Positioned(
                 bottom: 28,
                 child: Text(
@@ -160,9 +155,12 @@ class _SplashScreenState extends State<SplashScreen>
 class _BackgroundCircles extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final cx = size.width / 2, cy = size.height / 2;
-    final p = Paint()..color = const Color(0xFFC9A84C).withOpacity(0.05)
-      ..style = PaintingStyle.stroke..strokeWidth = 1;
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final p = Paint()
+      ..color = const Color(0xFFC9A84C).withOpacity(0.05)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
     for (final r in [200.0, 160.0, 120.0]) {
       canvas.drawCircle(Offset(cx, cy), r, p);
     }
@@ -208,8 +206,11 @@ class _SplashTreePainter extends CustomPainter {
       ..close();
     canvas.drawPath(trunkPath, trunkPaint);
 
-    final bp = Paint()..color = const Color(0xFF8B6914)
-      ..style = PaintingStyle.stroke..strokeWidth = 3..strokeCap = StrokeCap.round;
+    final bp = Paint()
+      ..color = const Color(0xFF8B6914)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round;
 
     final branches = [
       [60.0, 120.0, 15.0, 80.0],
@@ -222,20 +223,25 @@ class _SplashTreePainter extends CustomPainter {
     }
 
     final leafColors = [
-      const Color(0xFF2D6A4F), const Color(0xFF40916C), const Color(0xFF52B788)
+      const Color(0xFF2D6A4F),
+      const Color(0xFF40916C),
+      const Color(0xFF52B788),
     ];
     final leafPositions = [
-      [15.0,80], [10.0,72], [22.0,68],
-      [100.0,65], [108.0,57], [95.0,55],
-      [20.0,55], [12.0,47], [28.0,45],
-      [105.0,50], [112.0,42], [98.0,40],
+      [15.0, 80.0], [10.0, 72.0], [22.0, 68.0],
+      [100.0, 65.0], [108.0, 57.0], [95.0, 55.0],
+      [20.0, 55.0], [12.0, 47.0], [28.0, 45.0],
+      [105.0, 50.0], [112.0, 42.0], [98.0, 40.0],
     ];
     for (int i = 0; i < leafPositions.length; i++) {
-      final lp = Paint()..color = leafColors[i % 3]..style = PaintingStyle.fill;
+      final lp = Paint()
+        ..color = leafColors[i % 3]
+        ..style = PaintingStyle.fill;
       canvas.save();
       canvas.translate(leafPositions[i][0], leafPositions[i][1]);
       canvas.rotate(i * 30 * math.pi / 180);
-      canvas.drawOval(Rect.fromCenter(center: Offset.zero, width: 16, height: 10), lp);
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset.zero, width: 16, height: 10), lp);
       canvas.restore();
     }
   }
