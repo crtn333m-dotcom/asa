@@ -15,16 +15,12 @@ dependencies:
 
   cupertino_icons: ^1.0.8
 
-  # للرسم والتحكم بالواجهة
   provider: ^6.1.2
 
-  # حفظ الملفات والتصدير لاحقاً
   path_provider: ^2.1.4
 
-  # تصدير PDF لاحقاً
   pdf: ^3.11.0
 
-  # مشاركة الملفات
   share_plus: ^10.0.0
 
 
@@ -32,7 +28,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^5.0.0
+  flutter_lints: ^4.0.0
 
 
 flutter:
