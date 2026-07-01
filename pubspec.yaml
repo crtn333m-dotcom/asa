@@ -1,37 +1,13 @@
-name: asa
+name: family_tree_canvas
 
 description: 2D Canvas Family Tree Designer
-
-publish_to: 'none'
-
-version: 1.0.0+1
-
-environment:
-  sdk: ">=3.0.0 <4.0.0"
-
-dependencies:
-  flutter:
-    sdk: flutter
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-flutter:
-  uses-material-design: truename: family_tree_canvas
-
-<<<<<<< HEAD
-description: 2D Canvas Family Tree Designer
-=======
-description: Professional 2D Canvas Family Tree Designer
->>>>>>> 8706cb3 (setup flutter project)
 
 publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -39,15 +15,25 @@ dependencies:
 
   cupertino_icons: ^1.0.8
 
+  # للرسم والتحكم بالواجهة
+  provider: ^6.1.2
+
+  # حفظ الملفات والتصدير لاحقاً
+  path_provider: ^2.1.4
+
+  # تصدير PDF لاحقاً
+  pdf: ^3.11.0
+
+  # مشاركة الملفات
+  share_plus: ^10.0.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^5.0.0
 
+
 flutter:
-<<<<<<< HEAD
   uses-material-design: true
-=======
-  uses-material-design: true
->>>>>>> 8706cb3 (setup flutter project)
