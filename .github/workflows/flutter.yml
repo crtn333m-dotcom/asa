@@ -2,14 +2,11 @@ name: Flutter Build
 
 
 on:
-
   push:
-
     branches:
       - main
 
   pull_request:
-
     branches:
       - main
 
@@ -17,12 +14,9 @@ on:
 
 jobs:
 
-
   build:
 
-
     runs-on: ubuntu-latest
-
 
 
     steps:
@@ -40,21 +34,19 @@ jobs:
 
       with:
 
-        flutter-version: stable
+        channel: stable
+
+        architecture: x64
 
 
 
-    - name: Check files
+    - name: Flutter Doctor
 
-      run: |
-
-        ls
-
-        ls lib
+      run: flutter doctor -v
 
 
 
-    - name: Install dependencies
+    - name: Get packages
 
       run: flutter pub get
 
@@ -78,6 +70,6 @@ jobs:
 
       with:
 
-        name: app-release-apk
+        name: flutter-release-apk
 
         path: build/app/outputs/flutter-apk/app-release.apk
