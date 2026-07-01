@@ -2,207 +2,183 @@ import 'package:flutter/material.dart';
 
 import '../models/canvas_element.dart';
 
-import '../painters/tree_painter.dart';
 
 
-
-class CanvasView extends StatefulWidget{
-
-
-@override
-State<CanvasView> createState()=>_CanvasViewState();
+class TreePainter extends CustomPainter{
 
 
-}
-
-
-
-class _CanvasViewState extends State<CanvasView>{
-
-
-
-List<CanvasElement> elements=[];
-
+List<CanvasElement> elements;
 
 
 CanvasElement? selected;
 
 
 
-
-void add(ElementType type){
-
-
-setState((){
-
-
-elements.add(
-
-CanvasElement(
-
-id:DateTime.now()
-.toString(),
-
-
-type:type,
-
-
-position:
-
-const Offset(200,200)
-
-)
-
-
+TreePainter(
+this.elements,
+this.selected
 );
-
-
-});
-
-
-}
-
 
 
 
 @override
-Widget build(BuildContext context){
 
+void paint(Canvas canvas,Size size){
 
 
-return Scaffold(
 
+for(var e in elements){
 
 
-floatingActionButton:
+Paint p=Paint()
 
-PopupMenuButton(
+..color=e.color;
 
-child:
 
-FloatingActionButton(
 
-child:
+canvas.save();
 
-const Icon(Icons.add),
 
-onPressed:null,
 
-),
+canvas.translate(
 
+e.position.dx,
 
-
-itemBuilder:(context)=>[
-
-
-PopupMenuItem(
-
-child:
-
-const Text("Trunk"),
-
-onTap:()=>add(ElementType.trunk)
-
-),
-
-
-
-PopupMenuItem(
-
-child:
-
-const Text("Branch"),
-
-onTap:()=>add(ElementType.branch)
-
-),
-
-
-
-PopupMenuItem(
-
-child:
-
-const Text("Leaf"),
-
-onTap:()=>add(ElementType.leaf)
-
-),
-
-
-],
-
-
-),
-
-
-
-
-body:
-
-GestureDetector(
-
-
-
-onPanUpdate:(d){
-
-
-
-if(selected!=null && 
-!selected!.locked){
-
-
-setState((){
-
-
-selected!.position += d.delta;
-
-
-});
-
-
-}
-
-
-
-},
-
-
-
-
-child:
-
-CustomPaint(
-
-
-size:
-
-Size.infinite,
-
-
-painter:
-
-TreePainter(
-
-elements,
-
-selected
-
-),
-
-
-),
-
-
-
-),
-
+e.position.dy
 
 );
 
 
 
+canvas.rotate(e.rotation);
+
+
+
+if(e.type==ElementType.leaf){
+
+
+canvas.drawOval(
+
+Rect.fromLTWH(
+
+0,
+
+0,
+
+e.width,
+
+e.height
+
+),
+
+p
+
+);
+
+
 }
+
+else{
+
+
+canvas.drawRRect(
+
+RRect.fromRectAndRadius(
+
+Rect.fromLTWH(
+
+0,
+
+0,
+
+e.width,
+
+e.height
+
+),
+
+const Radius.circular(20)
+
+),
+
+p
+
+);
+
+
+}
+
+
+
+
+if(e.text.isNotEmpty){
+
+
+TextPainter t=TextPainter(
+
+text:
+
+TextSpan(
+
+text:e.text,
+
+style:
+
+const TextStyle(
+
+color:Colors.white
+
+)
+
+),
+
+
+textDirection:
+TextDirection.rtl
+
+);
+
+
+
+t.layout();
+
+
+
+t.paint(
+
+canvas,
+
+Offset(
+
+20,
+
+40
+
+)
+
+);
+
+
+}
+
+
+
+
+canvas.restore();
+
+
+
+}
+
+
+
+}
+
+
+
+@override
+
+bool shouldRepaint(oldDelegate)=>true;
 
 
 }
